@@ -70,10 +70,15 @@ proc chooseVersion(version: string, params: CliParams) =
         path = downloadDLLs(params)
         tempDir = getTempDir() / "choosenim-dlls"
         binDir = getBinDir(params)
+      echo "tempDir is " & tempDir
       removeDir(tempDir)
       createDir(tempDir)
-      extract(path, tempDir)
+      try:
+        extract(path, tempDir)
+      except:
+        discard
       for kind, path in walkDir(tempDir, relative = true):
+        echo "kind is ", kind, " path is ", path
         if kind == pcFile:
           try:
             if not fileExists(binDir / path) or
